@@ -20,6 +20,7 @@ Set objFSO = CreateObject("Scripting.FileSystemObject")
 Set objShell = WScript.CreateObject("WScript.Shell") 
 Dim StringCMD
 
+'vbscript method
 For Each Item In PcName
 
 	strRemotePath = "\\"&Item&"\c$" 
@@ -57,6 +58,18 @@ For Each Item In PcName
 	Wscript.Sleep 1000
 	End if 
 
+Next
+
+'DOS batch pushD and popD method
+For Each Item In PcName
+	StringCMD = "cmd /c net use \\" & Item & "\c$ /user:" & strUser & " " & strPassword & " /persistent:yes"
+	objShell.Run StringCMD, 0 , True
+	StringCMD = "cmd /c pushd \\"& Item & "\c$\transactive\log\"
+	objShell.Run StringCMD, 0 , True
+	StringCMD = "cmd /c del .\*Archive*"
+	objShell.Run StringCMD, 0 , True
+	StringCMD = "cmd /c popd"
+	objShell.Run StringCMD, 0 , True	
 Next
 
 Set objNetwork = Nothing
